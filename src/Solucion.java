@@ -11,6 +11,8 @@ public class Solucion {
     }
 
     public void addSoluciones(List<Maquina> e){
+
+        /// verificar si esta la solucion y excluir las de diferente orden
          this.soluciones.add(e);
     }
 
