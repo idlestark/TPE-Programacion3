@@ -13,7 +13,30 @@ public class Solucion {
     public void addSoluciones(List<Maquina> e){
 
         /// verificar si esta la solucion y excluir las de diferente orden
-         this.soluciones.add(e);
+        if (!esIgual(e)){
+            this.soluciones.add(e);
+        }
+
+    }
+
+    public boolean esIgual(List<Maquina> e){
+        Integer aux = 0;
+        for (List<Maquina> lista : soluciones){
+            if (e == lista){
+                return true;
+            }
+            if (e.size() != lista.size()){
+                return false;
+            }
+            for (Maquina maquina : lista){
+                if (Collections.frequency(e, maquina) != Collections.frequency(lista, maquina)){
+                    return false;
+                }
+            }
+
+        }
+
+        return false;
     }
 
     public List<List<Maquina>> getSoluciones() {
