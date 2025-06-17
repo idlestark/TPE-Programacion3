@@ -14,34 +14,20 @@ import java.util.List;
             this.maquinas = new ArrayList<>();
         }
 
-        /**
-         * Carga la configuración desde un archivo ubicado en el classpath.
-         * @param rutaRecurso La ruta al archivo dentro del classpath,
-         * ej. "datasets/config.txt"
-         */
         public void cargarConfiguracion(String rutaRecurso) {
-            // Obtener el ClassLoader para cargar el recurso
             ClassLoader classLoader = getClass().getClassLoader();
-            // Obtener el recurso como un InputStream
             InputStream inputStream = classLoader.getResourceAsStream(rutaRecurso);
 
             if (inputStream == null) {
                 System.err.println("Error: No se pudo encontrar el archivo de configuración en el classpath: " + rutaRecurso);
-                // Intenta con una barra inicial si la estructura lo requiere (menos común para ClassLoader)
-                // inputStream = classLoader.getResourceAsStream("/" + rutaRecurso);
-                // if (inputStream == null) {
-                //     System.err.println("Error: Tampoco se pudo encontrar con '/' al inicio: /" + rutaRecurso);
-                //     return;
-                // }
                 return;
             }
 
-            // Usar InputStreamReader para leer el InputStream con una codificación específica (UTF-8 es común)
-            // y BufferedReader para una lectura eficiente línea por línea.
+
             try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
                 String linea;
 
-                // Leer la primera línea para PiezasTotales
+
                 if ((linea = br.readLine()) != null) {
                     this.piezasTotales = Integer.parseInt(linea.trim());
                 } else {
@@ -49,7 +35,7 @@ import java.util.List;
                     return;
                 }
 
-                // Leer las líneas siguientes para las máquinas
+
                 while ((linea = br.readLine()) != null) {
                     String[] partes = linea.split(",");
                     if (partes.length == 2) {

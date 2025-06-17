@@ -1,3 +1,8 @@
 # Fabrica-Programcion3
 
-Hacer público antes de entregarlo.
+Grupo 42
+
+Integrantes: 
+
+- Echeverría Iñaki Sebastián
+- Ibarra Luca Samuel

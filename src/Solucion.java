@@ -12,32 +12,36 @@ public class Solucion {
 
     public void addSoluciones(List<Maquina> e){
 
-        /// verificar si esta la solucion y excluir las de diferente orden
-        if (!esIgual(e)){
+        if (!loContiene(e)){
             this.soluciones.add(e);
         }
 
     }
 
-    public boolean esIgual(List<Maquina> e){
-        Integer aux = 0;
-        for (List<Maquina> lista : soluciones){
-            if (e == lista){
+    public boolean loContiene(List<Maquina> e) {
+        for (List<Maquina> lista : soluciones) {
+            if (e.size() != lista.size()) {
+                continue;
+            }
+
+            Map<Maquina, Integer> conteoE = contarFrecuencias(e);
+            Map<Maquina, Integer> conteoLista = contarFrecuencias(lista);
+
+            if (conteoE.equals(conteoLista)) {
                 return true;
             }
-            if (e.size() != lista.size()){
-                return false;
-            }
-            for (Maquina maquina : lista){
-                if (Collections.frequency(e, maquina) != Collections.frequency(lista, maquina)){
-                    return false;
-                }
-            }
-
         }
-
         return false;
     }
+
+    private Map<Maquina, Integer> contarFrecuencias(List<Maquina> lista) {
+        Map<Maquina, Integer> mapa = new HashMap<>();
+        for (Maquina m : lista) {
+            mapa.put(m, mapa.getOrDefault(m, 0) + 1);
+        }
+        return mapa;
+    }
+
 
     public List<List<Maquina>> getSoluciones() {
         return soluciones;
@@ -51,5 +55,7 @@ public class Solucion {
         return tamanioMinimo;
     }
 
-
+    public void clearSoluciones(){
+        this.soluciones.clear();
+    }
 }
