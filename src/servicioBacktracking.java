@@ -31,12 +31,7 @@ public class servicioBacktracking {
         return cantidadEstados;
     }
 
-    public void CantidadMinima(){
-        List<Maquina> solu = new ArrayList<>();
-        Integer contador = 0;
 
-        backtracking(solu, contador);
-    }
 
 
     /*
@@ -62,13 +57,21 @@ public class servicioBacktracking {
      *      se evita seguir explorando esa rama (solu.size() >= tamanioMinimo).
      */
 
+    public void CantidadMinima() {
+        List<Maquina> solu = new ArrayList<>();
+        int contador = 0;
+        backtracking(solu, contador, 0);
+    }
 
-    private void backtracking(List<Maquina> solu, Integer contador) {
-        cantidadEstados++;
+
+    private void backtracking(List<Maquina> solu, int contador, int startIndex) {
         if (contador > this.fabrica.getPiezas()) {
             return;
         }
-        if (contador == this.fabrica.getPiezas()){
+
+        cantidadEstados++;
+
+        if (contador == this.fabrica.getPiezas()) {
             if (this.solucion.getTamanioMinimo() == 0 || solu.size() < this.solucion.getTamanioMinimo()) {
                 this.solucion.clearSoluciones();
                 this.solucion.addSoluciones(new ArrayList<>(solu));
@@ -76,46 +79,25 @@ public class servicioBacktracking {
             } else if (solu.size() == this.solucion.getTamanioMinimo()) {
                 this.solucion.addSoluciones(new ArrayList<>(solu));
             }
+            return;
         }
 
-        if (this.solucion.getTamanioMinimo() != 0 && solu.size() >= this.solucion.getTamanioMinimo()) return;
+        if (this.solucion.getTamanioMinimo() != 0 && solu.size() >= this.solucion.getTamanioMinimo()) {
+            return;
+        }
+
         List<Maquina> maquinas = this.fabrica.getMaquinas();
-        for (Maquina maquina : maquinas) {
+        for (int i = startIndex; i < maquinas.size(); i++) {
+            Maquina maquina = maquinas.get(i);
+            int nuevoContador = contador + maquina.getCantPiezas();
 
-            solu.add(maquina);
-
-            Integer aux = contador + maquina.getCantPiezas();
-            backtracking(solu,aux);
-
-            solu.remove(solu.size() - 1);
-        }
-
-    }
-
-
-    public Integer suma(List<Maquina> solu) {
-        Integer cantidad = 0;
-        for (Maquina maquina : solu) {
-            cantidad = maquina.getCantPiezas() + cantidad;
-        }
-        return cantidad;
-    }
-
-    public void imprimirSolucionesBacktracking() {
-        Integer aux = 0;
-        System.out.println("Backtracking");
-        if (this.solucion.getSoluciones().size()== 1) {
-            System.out.println("Solución obtenida: " + this.solucion.getSoluciones().size());
-        } else if (this.solucion.getSoluciones().size() > 1) {
-            System.out.println("Soluciones obtenidas: " + this.solucion.getSoluciones().size());
-        }
-        for (List<Maquina> lista : this.solucion.getSoluciones()) {
-            aux++;
-            System.out.println("Solución encontrada " + aux + ":");
-            for (Maquina maquina : lista) {
-                System.out.print(" " + "(" + maquina.getNombre() + "," + maquina.getCantPiezas() + ")");
+            // Poda
+            if (nuevoContador <= this.fabrica.getPiezas()) {
+                solu.add(maquina);
+                backtracking(solu, nuevoContador, i);// `i` permite repetir la misma máquina
+                solu.removeLast();
             }
-            System.out.println();
         }
     }
+
 }

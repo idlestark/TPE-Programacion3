@@ -47,19 +47,23 @@ public class servicioGreedy {
     public List<Maquina> greedy() {
         int piezasRestantes = this.fabrica.getPiezas();
         List<Maquina> solucion = new ArrayList<>();
-        List<Maquina> maquinas = this.fabrica.getMaquinas();
 
-        while (piezasRestantes > 0) {
-            Maquina seleccionada = seleccionar(maquinas, piezasRestantes);
-            if (seleccionada == null) {
-                System.out.println("No se ha encontrado una solución Greedy posible.");
-                return new ArrayList<>();
+        List<Maquina> maquinasOrdenadas = new ArrayList<>(this.fabrica.getMaquinas());
+        maquinasOrdenadas.sort((m1, m2) -> Integer.compare(m2.getCantPiezas(), m1.getCantPiezas()));
+
+        for (Maquina m : maquinasOrdenadas) {
+            while (m.getCantPiezas() <= piezasRestantes) {
+                solucion.add(m);
+                piezasRestantes -= m.getCantPiezas();
+                cantidadEstados++;
             }
-            solucion.add(seleccionada);
-            piezasRestantes -= seleccionada.getCantPiezas();
         }
 
-        return solucion;
+        if (piezasRestantes == 0) {
+            return solucion;
+        } else {
+            return new ArrayList<>(); // No hay solución greedy válida
+        }
     }
 
 
@@ -78,17 +82,4 @@ public class servicioGreedy {
 
 
 
-
-    public void imprimirSolucionesGreedy(List<Maquina> solucionGreedy){
-            System.out.println("Greedy");
-            if (solucionGreedy.isEmpty()) {
-                System.out.println("No se encontraron soluciones usando el enfoque Greedy.");
-            } else {
-                System.out.println("Solución encontrada: ");
-                for (Maquina maquina : solucionGreedy) {
-                    System.out.print(" " + "(" + maquina.getNombre() + "," + maquina.getCantPiezas() + ")");
-                }
-                System.out.println();
-            }
-    }
 }

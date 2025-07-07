@@ -1,15 +1,14 @@
 import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) {
 
         lectorTexto config = new lectorTexto();
         String rutaDelRecurso = "datasets/config.txt";
         config.cargarConfiguracion(rutaDelRecurso);
 
-
         config.mostrarConfiguracion();
-
 
         if (!config.getMaquinas().isEmpty()) {
             int sumaPiezasMaquinas = 0;
@@ -20,31 +19,62 @@ public class Main {
             System.out.println(" ");
             Fabrica fabrica = new Fabrica(config.getMaquinas(), config.getPiezasTotales());
 
-            //BACKTRACKING
-
+            // BACKTRACKING
             servicioBacktracking servicioBacktracking = new servicioBacktracking(fabrica);
             servicioBacktracking.CantidadMinima();
-            servicioBacktracking.imprimirSolucionesBacktracking();
+            Solucion solucion = servicioBacktracking.getSolucion();
+
+            System.out.println("Backtracking");
+            int cantidad = solucion.getSoluciones().size();
+
+            if (cantidad == 1) {
+                System.out.println("Solución obtenida: 1");
+            } else if (cantidad > 1) {
+                System.out.println("Soluciones obtenidas: " + cantidad);
+            }
+
+            int aux = 1;
+            for (List<Maquina> lista : solucion.getSoluciones()) {
+                System.out.println("Solución encontrada " + aux + ":");
+                for (Maquina maquina : lista) {
+                    System.out.print(" (" + maquina.getNombre() + "," + maquina.getCantPiezas() + ")");
+                }
+                System.out.println();
+                aux++;
+            }
             System.out.println("Cantidad de piezas requeridas: " + config.getPiezasTotales());
-            System.out.println("Cantidad de maquinas puestas en funcionamiento requeridas: " + servicioBacktracking.getSolucion().getTamanioMinimo());
-            System.out.println("Cantidad de estados generados: " + servicioBacktracking.getCantidadEstados() + ", se contaron todas las combinaciones de máquinas posibles para alcanzar la cantidad de piezas necesarias.");
+            System.out.println("Cantidad de máquinas puestas en funcionamiento requeridas: " + servicioBacktracking.getSolucion().getTamanioMinimo());
+            System.out.println("Cantidad de estados generados: " + servicioBacktracking.getCantidadEstados() + ", se contaron todas las combinaciones válidas exploradas para alcanzar la cantidad de piezas necesarias.");
 
             System.out.println(" ");
 
-            // GREEDY
-
-            servicioGreedy servicioGreedy = new servicioGreedy(fabrica);
-            List<Maquina> solucionGreedy = servicioGreedy.greedy();
-            servicioGreedy.imprimirSolucionesGreedy(solucionGreedy);
-            System.out.println("Cantidad de piezas requeridas: " + config.getPiezasTotales());
-            System.out.println("Cantidad de maquinas puestas en funcionamiento requeridas: " + solucionGreedy.size());
-            System.out.println("Cantidad de estados generados: " + servicioGreedy.getCantidadEstados() + ", se contaron todos los candidatos posibles cada vez que se iba a seleccionar una máquina.");
 
 
-        } else {
-            System.out.println("No se cargaron máquinas desde el archivo.");
 
 
+                // GREEDY
+
+                servicioGreedy servicioGreedy = new servicioGreedy(fabrica);
+                List<Maquina> solucionGreedy = servicioGreedy.greedy();
+
+                System.out.println("Greedy");
+                if (solucionGreedy == null || solucionGreedy.isEmpty()) {
+                    System.out.println("No se encontró una solución válida usando el enfoque Greedy.");
+                    System.out.println("Cantidad de piezas requeridas: " + config.getPiezasTotales());
+                    System.out.println("Cantidad de máquinas puestas en funcionamiento requeridas: -");
+                } else {
+                    System.out.println("Solución encontrada:");
+                    for (Maquina maquina : solucionGreedy) {
+                        System.out.print(" (" + maquina.getNombre() + "," + maquina.getCantPiezas() + ")");
+                    }
+                    System.out.println();
+                    System.out.println("Cantidad de piezas requeridas: " + config.getPiezasTotales());
+                    System.out.println("Cantidad de máquinas puestas en funcionamiento requeridas: " + solucionGreedy.size());
+                }
+
+                System.out.println("Cantidad de estados generados: " + servicioGreedy.getCantidadEstados() +
+                        ", se contaron los usos efectivos de máquinas durante la selección greedy.");
+            }
         }
     }
-}
+

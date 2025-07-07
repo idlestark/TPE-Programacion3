@@ -11,36 +11,9 @@ public class Solucion {
     }
 
     public void addSoluciones(List<Maquina> e){
-
-        if (!loContiene(e)){
-            this.soluciones.add(e);
-        }
-
+        this.soluciones.add(e);
     }
 
-    public boolean loContiene(List<Maquina> e) {
-        for (List<Maquina> lista : soluciones) {
-            if (e.size() != lista.size()) {
-                continue;
-            }
-
-            Map<Maquina, Integer> conteoE = contarFrecuencias(e);
-            Map<Maquina, Integer> conteoLista = contarFrecuencias(lista);
-
-            if (conteoE.equals(conteoLista)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Map<Maquina, Integer> contarFrecuencias(List<Maquina> lista) {
-        Map<Maquina, Integer> mapa = new HashMap<>();
-        for (Maquina m : lista) {
-            mapa.put(m, mapa.getOrDefault(m, 0) + 1);
-        }
-        return mapa;
-    }
 
 
     public List<List<Maquina>> getSoluciones() {
